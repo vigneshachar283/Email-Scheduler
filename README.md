@@ -93,7 +93,7 @@ what makes restart-safety possible.
 - [x] Ethereal SMTP sending with preview URLs
 
 **Frontend**
-- [x] Login (see note on scope below)
+- [x] Login via real Google OAuth
 - [x] Dashboard with header (user info + logout)
 - [x] Scheduled Emails / Sent Emails tabs
 - [x] Compose modal: subject, body, recipient file upload with detected
@@ -103,14 +103,11 @@ what makes restart-safety possible.
 
 ## Assumptions, shortcuts & trade-offs
 
-- **Mock login instead of real Google OAuth.** The assignment asks for real
-  OAuth; for this solo/portfolio build, the engineering time was
-  deliberately weighted toward the scheduler internals (queueing, rate
-  limiting, persistence) since that's the harder and more differentiating
-  part. The auth layer is structurally the same shape it would be with real
-  OAuth (signed token, middleware guard, `req.user`), so swapping in
-  `passport-google-oauth20` later is a contained change — see
-  `backend/src/middleware/mockAuth.ts` for the note on how.
+- **Real Google OAuth.** Login uses `passport-google-oauth20`: the backend
+  redirects to Google, exchanges the code, then issues its own signed JWT
+  (`middleware/auth.ts`) that the frontend stores and sends as a bearer
+  token on subsequent requests. You'll need your own Google OAuth client
+  ID/secret to run this locally — see **Running locally** below.
 - Hourly rate-limit buckets reset on the clock hour rather than being a
   strict rolling 60-minute window — documented trade-off above.
 - The Figma-matching pixel-perfect frontend work was skipped in favor of a
@@ -128,6 +125,14 @@ npx prisma migrate dev --name init
 npm run seed                # creates an Ethereal test sender
 ```
 
+Before starting the server, fill in these values in `backend/.env`:
+- `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` — from a Google Cloud OAuth
+  2.0 Client ID (Web application). Add
+  `http://localhost:4000/auth/google/callback` as an authorized redirect
+  URI.
+- `JWT_SECRET` — any random string; used to sign the app's session token
+  after Google login succeeds.
+
 ### 2. Start the backend (two processes)
 ```bash
 npm run dev                 # API server on :4000
@@ -142,7 +147,7 @@ npm install
 npm run dev                 # http://localhost:3000
 ```
 
-Log in with any name/email (mock auth), then use **Compose New Email** to
+Log in with your Google account, then use **Compose New Email** to
 schedule a campaign. Sent-mail previews are viewable at
 https://ethereal.email/login using the seeded sender's credentials (printed
 by `npm run seed`).
