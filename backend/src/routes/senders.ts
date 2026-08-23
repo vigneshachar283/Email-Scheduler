@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { createSender, listSenders } from "../controllers/senderController";
-import { requireAuth } from "../middleware/mockAuth";
+import { requireAuth } from "../middleware/auth";
 
 export const senderRouter = Router();
 

@@ -4,18 +4,27 @@ exports.env = void 0;
 require("dotenv/config");
 const zod_1 = require("zod");
 const envSchema = zod_1.z.object({
+    // Server
     PORT: zod_1.z.string().default("4000"),
+    CORS_ORIGIN: zod_1.z.string().default("http://localhost:3000"),
+    // Database
     DATABASE_URL: zod_1.z.string(),
+    // Redis
     REDIS_HOST: zod_1.z.string().default("127.0.0.1"),
     REDIS_PORT: zod_1.z.string().default("6379"),
     REDIS_PASSWORD: zod_1.z.string().optional(),
-    // Worker tuning — all configurable, nothing hardcoded per assignment spec
+    // Worker configuration
     WORKER_CONCURRENCY: zod_1.z.string().default("5"),
     MIN_DELAY_BETWEEN_EMAILS_MS: zod_1.z.string().default("2000"),
     MAX_EMAILS_PER_HOUR_GLOBAL: zod_1.z.string().default("500"),
-    // Mock auth (real Google OAuth intentionally out of scope for this portfolio build)
-    MOCK_AUTH_SECRET: zod_1.z.string().default("dev-secret-change-me"),
-    CORS_ORIGIN: zod_1.z.string().default("http://localhost:3000"),
+    // Google OAuth
+    GOOGLE_CLIENT_ID: zod_1.z.string().min(1),
+    GOOGLE_CLIENT_SECRET: zod_1.z.string().min(1),
+    GOOGLE_CALLBACK_URL: zod_1.z
+        .string()
+        .default("http://localhost:4000/auth/google/callback"),
+    // JWT used after successful OAuth login
+    JWT_SECRET: zod_1.z.string().min(1),
 });
 const parsed = envSchema.safeParse(process.env);
 if (!parsed.success) {
@@ -24,6 +33,7 @@ if (!parsed.success) {
 }
 exports.env = {
     PORT: Number(parsed.data.PORT),
+    CORS_ORIGIN: parsed.data.CORS_ORIGIN,
     DATABASE_URL: parsed.data.DATABASE_URL,
     REDIS_HOST: parsed.data.REDIS_HOST,
     REDIS_PORT: Number(parsed.data.REDIS_PORT),
@@ -31,7 +41,9 @@ exports.env = {
     WORKER_CONCURRENCY: Number(parsed.data.WORKER_CONCURRENCY),
     MIN_DELAY_BETWEEN_EMAILS_MS: Number(parsed.data.MIN_DELAY_BETWEEN_EMAILS_MS),
     MAX_EMAILS_PER_HOUR_GLOBAL: Number(parsed.data.MAX_EMAILS_PER_HOUR_GLOBAL),
-    MOCK_AUTH_SECRET: parsed.data.MOCK_AUTH_SECRET,
-    CORS_ORIGIN: parsed.data.CORS_ORIGIN,
+    GOOGLE_CLIENT_ID: parsed.data.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: parsed.data.GOOGLE_CLIENT_SECRET,
+    GOOGLE_CALLBACK_URL: parsed.data.GOOGLE_CALLBACK_URL,
+    JWT_SECRET: parsed.data.JWT_SECRET,
 };
 //# sourceMappingURL=env.js.map

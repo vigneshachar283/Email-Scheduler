@@ -44,8 +44,9 @@ async function processEmailJob(job, token) {
     // Rate limit check — bucketed per (sender, campaign) so two campaigns
     // sharing a sender each get their own hourly budget, using whatever
     // hourlyLimit the user set when scheduling this campaign.
-    const rateLimitKey = `${emailJob.senderId}:${emailJob.campaignId}`;
-    const rateCheck = await (0, rateLimiter_1.tryConsumeRateLimit)(rateLimitKey, emailJob.campaign.hourlyLimit);
+    const rateLimitKey = `sender:${emailJob.senderId}`;
+    const effectiveHourlyLimit = Math.min(emailJob.campaign.hourlyLimit, emailJob.sender.maxEmailsPerHour, env_1.env.MAX_EMAILS_PER_HOUR_GLOBAL);
+    const rateCheck = await (0, rateLimiter_1.tryConsumeRateLimit)(rateLimitKey, effectiveHourlyLimit);
     if (!rateCheck.allowed) {
         const retryAfterMs = rateCheck.retryAfterMs ?? 60 * 60 * 1000;
         console.log(`[worker] Rate limit hit for sender ${emailJob.senderId} (${rateCheck.currentCount}/${rateCheck.limit}). ` +

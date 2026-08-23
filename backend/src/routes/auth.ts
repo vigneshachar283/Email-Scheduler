@@ -1,27 +1,41 @@
 import { Router } from "express";
-import { issueMockToken, requireAuth } from "../middleware/mockAuth";
-import crypto from "crypto";
+import passport from "passport";
+import { issueAppToken, requireAuth } from "../middleware/auth";
 
 export const authRouter = Router();
 
-/**
- * Mock "Google login". Real flow would redirect to Google's consent screen
- * and land here on callback with a verified profile; here we just accept
- * whatever name/email the frontend sends (its own hardcoded demo user) and
- * issue a signed token, so the rest of the app (header, protected routes)
- * behaves exactly as it would with real OAuth wired in.
- */
-authRouter.post("/mock-login", (req, res) => {
-  const { name, email } = req.body ?? {};
-  const user = {
-    id: crypto.randomUUID(),
-    name: name || "Demo User",
-    email: email || "demo.user@example.com",
-    avatarUrl: `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name || "Demo User")}`,
-  };
-  const token = issueMockToken(user);
-  res.json({ token, user });
-});
+// Redirect the user to Google's login/consent screen
+authRouter.get(
+  "/google",
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    session: false,
+  })
+);
+
+// Google redirects the user here after successful authentication
+authRouter.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    session: false,
+    failureRedirect: `${process.env.CORS_ORIGIN ?? "http://localhost:3000"}/login`,
+  }),
+  (req, res) => {
+    const googleUser = req.user as {
+      id: string;
+      name: string;
+      email: string;
+      avatarUrl: string;
+    };
+
+    const token = issueAppToken(googleUser);
+
+    // Send the user back to the frontend with the app token.
+    res.redirect(
+      `${process.env.CORS_ORIGIN ?? "http://localhost:3000"}/auth/callback?token=${encodeURIComponent(token)}`
+    );
+  }
+);
 
 authRouter.get("/me", requireAuth, (req, res) => {
   res.json({ user: req.user });

@@ -8,10 +8,10 @@ const express_1 = require("express");
 const multer_1 = __importDefault(require("multer"));
 const scheduleController_1 = require("../controllers/scheduleController");
 const emailListController_1 = require("../controllers/emailListController");
-const mockAuth_1 = require("../middleware/mockAuth");
+const auth_1 = require("../middleware/auth");
 const upload = (0, multer_1.default)({ storage: multer_1.default.memoryStorage(), limits: { fileSize: 5 * 1024 * 1024 } });
 exports.emailsRouter = (0, express_1.Router)();
-exports.emailsRouter.use(mockAuth_1.requireAuth);
+exports.emailsRouter.use(auth_1.requireAuth);
 // multipart/form-data with an optional "recipientsFile" field (CSV/txt),
 // falling back to a JSON "recipients" array in the body if no file is sent.
 exports.emailsRouter.post("/schedule", upload.single("recipientsFile"), scheduleController_1.scheduleCampaign);
