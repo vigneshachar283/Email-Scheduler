@@ -1,7 +1,5 @@
 import nodemailer, { Transporter } from "nodemailer";
 
-// Ethereal creds differ per sender, so we cache one transporter per sender
-// instead of rebuilding a connection on every single send.
 const transporterCache = new Map<string, Transporter>();
 
 export function getTransporter(sender: {
@@ -44,7 +42,7 @@ export async function sendEmail(params: {
     html: `<p>${params.body.replace(/\n/g, "<br/>")}</p>`,
   });
 
-  // Ethereal gives us a preview URL — very handy for the demo video.
+  
   const previewUrl = nodemailer.getTestMessageUrl(info) || undefined;
 
   return { messageId: info.messageId, previewUrl };

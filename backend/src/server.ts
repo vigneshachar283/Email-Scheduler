@@ -3,9 +3,7 @@ import { env } from "./config/env";
 import { reconcilePendingJobs } from "./db/reconcile";
 
 async function main() {
-  // Defensive backstop described in emailWorker.ts — re-enqueues any DB
-  // rows that don't have a matching Redis job (only matters if Redis data
-  // was lost; normally a no-op).
+
   await reconcilePendingJobs();
 
   app.listen(env.PORT, () => {

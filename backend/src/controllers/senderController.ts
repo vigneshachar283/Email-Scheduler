@@ -9,7 +9,7 @@ export async function createSender(req: Request, res: Response) {
   }
 
   const sender = await prisma.sender.create({ data: parsed.data });
-  // Never echo back the SMTP password.
+  
   const { smtpPass, ...safe } = sender;
   return res.status(201).json(safe);
 }

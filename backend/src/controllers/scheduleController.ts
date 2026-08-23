@@ -5,8 +5,7 @@ import { scheduleCampaignSchema } from "../utils/validation";
 import { parseRecipientsFile } from "../utils/parseRecipients";
 
 export async function scheduleCampaign(req: Request, res: Response) {
-  // Recipients can arrive either as a JSON array in the body, or as an
-  // uploaded CSV/text file (multer puts it on req.file).
+ 
   let recipientsFromFile: string[] = [];
   if (req.file) {
     recipientsFromFile = parseRecipientsFile(req.file.buffer, req.file.originalname);
@@ -31,7 +30,6 @@ export async function scheduleCampaign(req: Request, res: Response) {
     return res.status(404).json({ error: "sender_not_found" });
   }
 
-  // De-dupe recipients within this single request up front.
   const uniqueRecipients = Array.from(new Set(recipients.map((r) => r.toLowerCase())));
 
   const campaign = await prisma.campaign.create({
@@ -41,10 +39,7 @@ export async function scheduleCampaign(req: Request, res: Response) {
   const created: { recipient: string; emailJobId: string; scheduledFor: Date }[] = [];
   const skippedDuplicates: string[] = [];
 
-  // Sequential, staggered scheduledFor per recipient: startTime + i*delay.
-  // This is what actually enforces "minimum delay between sends" at the
-  // schedule level; the worker's limiter (see emailWorker.ts) enforces it
-  // again at send time as a second line of defense.
+ 
   for (let i = 0; i < uniqueRecipients.length; i++) {
     const recipientEmail = uniqueRecipients[i];
     const scheduledFor = new Date(startTime.getTime() + i * delayBetweenEmailsMs);
@@ -74,8 +69,7 @@ export async function scheduleCampaign(req: Request, res: Response) {
 
       created.push({ recipient: recipientEmail, emailJobId: emailJob.id, scheduledFor });
     } catch (err: any) {
-      // Unique constraint on idempotencyKey — shouldn't happen within a
-      // fresh campaign, but guards against retried/duplicate requests.
+      
       if (err.code === "P2002") {
         skippedDuplicates.push(recipientEmail);
         continue;

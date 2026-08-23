@@ -21,8 +21,6 @@ services:
   redis:
     image: redis:7-alpine
     restart: unless-stopped
-    # appendonly persistence so delayed BullMQ jobs survive a Redis restart —
-    # this is what makes "server restart doesn't lose scheduled emails" hold.
     command: ["redis-server", "--appendonly", "yes"]
     ports:
       - "6379:6379"

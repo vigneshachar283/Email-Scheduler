@@ -9,8 +9,6 @@ export interface AuthUser {
   avatarUrl?: string;
 }
 
-// Passport already uses Express.User for req.user.
-// Extend that type instead of creating a separate AuthRequest type.
 declare global {
   namespace Express {
     interface User extends AuthUser {}

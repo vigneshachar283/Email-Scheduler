@@ -1,11 +1,6 @@
 const EMAIL_REGEX = /[^\s,;<>()"']+@[^\s,;<>()"']+\.[^\s,;<>()"']+/g;
 
-/**
- * Extracts email addresses from an uploaded CSV or .txt file.
- * Deliberately lenient about format — works whether the file is a single
- * column of emails, a full CSV with headers, or free-form text, by just
- * regex-matching anything email-shaped rather than assuming a schema.
- */
+
 export function parseRecipientsFile(buffer: Buffer, filename: string): string[] {
   const text = buffer.toString("utf-8");
   const matches = text.match(EMAIL_REGEX) ?? [];

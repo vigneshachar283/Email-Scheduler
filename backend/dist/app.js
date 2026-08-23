@@ -21,9 +21,7 @@ exports.app.get("/health", (_req, res) => res.json({ status: "ok" }));
 exports.app.use("/auth", auth_1.authRouter);
 exports.app.use("/senders", senders_1.senderRouter);
 exports.app.use("/emails", emails_1.emailsRouter);
-// Centralized error handler — catches anything thrown/rejected in route handlers
 exports.app.use((err, _req, res, _next) => {
     console.error("[error]", err);
     res.status(err.status ?? 500).json({ error: "internal_error", message: err.message });
 });
-//# sourceMappingURL=app.js.map

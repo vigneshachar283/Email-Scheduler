@@ -4,7 +4,7 @@ import { issueAppToken, requireAuth } from "../middleware/auth";
 
 export const authRouter = Router();
 
-// Redirect the user to Google's login/consent screen
+
 authRouter.get(
   "/google",
   passport.authenticate("google", {
@@ -13,7 +13,7 @@ authRouter.get(
   })
 );
 
-// Google redirects the user here after successful authentication
+
 authRouter.get(
   "/google/callback",
   passport.authenticate("google", {
@@ -30,7 +30,7 @@ authRouter.get(
 
     const token = issueAppToken(googleUser);
 
-    // Send the user back to the frontend with the app token.
+    
     res.redirect(
       `${process.env.CORS_ORIGIN ?? "http://localhost:3000"}/auth/callback?token=${encodeURIComponent(token)}`
     );

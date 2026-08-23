@@ -1,9 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 
-// Reuse a single client across hot reloads / imports instead of
-// opening a new connection pool every time this module is imported.
+
 declare global {
-  // eslint-disable-next-line no-var
+  
   var __prisma: PrismaClient | undefined;
 }
 

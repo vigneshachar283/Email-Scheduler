@@ -21,7 +21,6 @@ app.use("/auth", authRouter);
 app.use("/senders", senderRouter);
 app.use("/emails", emailsRouter);
 
-// Centralized error handler — catches anything thrown/rejected in route handlers
 app.use((err: any, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
   console.error("[error]", err);
   res.status(err.status ?? 500).json({ error: "internal_error", message: err.message });

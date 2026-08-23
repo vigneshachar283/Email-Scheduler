@@ -1,11 +1,7 @@
 import nodemailer from "nodemailer";
 import { prisma } from "./prisma";
 
-/**
- * Creates one Ethereal test account and stores it as a Sender row, so you
- * can hit the Schedule API immediately without manually signing up for
- * Ethereal creds first. Run with: npm run seed
- */
+
 async function main() {
   const testAccount = await nodemailer.createTestAccount();
 

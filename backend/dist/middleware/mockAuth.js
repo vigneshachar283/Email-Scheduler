@@ -41,4 +41,3 @@ function requireAuth(req, res, next) {
     req.user = user;
     next();
 }
-//# sourceMappingURL=mockAuth.js.map
