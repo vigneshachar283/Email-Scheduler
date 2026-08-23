@@ -5,7 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const nodemailer_1 = __importDefault(require("nodemailer"));
 const prisma_1 = require("./prisma");
-
 async function main() {
     const testAccount = await nodemailer_1.default.createTestAccount();
     const sender = await prisma_1.prisma.sender.upsert({
@@ -33,3 +32,4 @@ main()
     process.exit(1);
 })
     .finally(() => prisma_1.prisma.$disconnect());
+//# sourceMappingURL=seed.js.map

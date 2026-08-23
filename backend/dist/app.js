@@ -25,3 +25,4 @@ exports.app.use((err, _req, res, _next) => {
     console.error("[error]", err);
     res.status(err.status ?? 500).json({ error: "internal_error", message: err.message });
 });
+//# sourceMappingURL=app.js.map

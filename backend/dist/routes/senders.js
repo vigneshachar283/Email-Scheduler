@@ -8,3 +8,4 @@ exports.senderRouter = (0, express_1.Router)();
 exports.senderRouter.use(auth_1.requireAuth);
 exports.senderRouter.post("/", senderController_1.createSender);
 exports.senderRouter.get("/", senderController_1.listSenders);
+//# sourceMappingURL=senders.js.map

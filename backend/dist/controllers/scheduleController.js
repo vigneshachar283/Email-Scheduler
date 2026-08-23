@@ -6,7 +6,6 @@ const emailQueue_1 = require("../queue/emailQueue");
 const validation_1 = require("../utils/validation");
 const parseRecipients_1 = require("../utils/parseRecipients");
 async function scheduleCampaign(req, res) {
-    
     let recipientsFromFile = [];
     if (req.file) {
         recipientsFromFile = (0, parseRecipients_1.parseRecipientsFile)(req.file.buffer, req.file.originalname);
@@ -24,14 +23,12 @@ async function scheduleCampaign(req, res) {
     if (!sender) {
         return res.status(404).json({ error: "sender_not_found" });
     }
-  
     const uniqueRecipients = Array.from(new Set(recipients.map((r) => r.toLowerCase())));
     const campaign = await prisma_1.prisma.campaign.create({
         data: { subject, body, startTime, delayBetweenEmailsMs, hourlyLimit },
     });
     const created = [];
     const skippedDuplicates = [];
- 
     for (let i = 0; i < uniqueRecipients.length; i++) {
         const recipientEmail = uniqueRecipients[i];
         const scheduledFor = new Date(startTime.getTime() + i * delayBetweenEmailsMs);
@@ -58,7 +55,6 @@ async function scheduleCampaign(req, res) {
             created.push({ recipient: recipientEmail, emailJobId: emailJob.id, scheduledFor });
         }
         catch (err) {
-           
             if (err.code === "P2002") {
                 skippedDuplicates.push(recipientEmail);
                 continue;
@@ -74,3 +70,4 @@ async function scheduleCampaign(req, res) {
         lastScheduledFor: created[created.length - 1]?.scheduledFor,
     });
 }
+//# sourceMappingURL=scheduleController.js.map

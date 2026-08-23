@@ -8,8 +8,6 @@ const prisma_1 = require("../db/prisma");
 const mailer_1 = require("../services/mailer");
 const rateLimiter_1 = require("../services/rateLimiter");
 const env_1 = require("../config/env");
-
-
 async function processEmailJob(job, token) {
     const { emailJobId } = job.data;
     const emailJob = await prisma_1.prisma.emailJob.findUnique({
@@ -20,12 +18,10 @@ async function processEmailJob(job, token) {
         console.warn(`[worker] EmailJob ${emailJobId} not found in DB, skipping (job ${job.id})`);
         return { skipped: true, reason: "not_found" };
     }
-    
     if (emailJob.status === "SENT") {
         console.log(`[worker] EmailJob ${emailJobId} already SENT, skipping duplicate delivery`);
         return { skipped: true, reason: "already_sent" };
     }
-    
     const rateLimitKey = `sender:${emailJob.senderId}`;
     const effectiveHourlyLimit = Math.min(emailJob.campaign.hourlyLimit, emailJob.sender.maxEmailsPerHour, env_1.env.MAX_EMAILS_PER_HOUR_GLOBAL);
     const rateCheck = await (0, rateLimiter_1.tryConsumeRateLimit)(rateLimitKey, effectiveHourlyLimit);
@@ -38,11 +34,9 @@ async function processEmailJob(job, token) {
             data: { status: "RESCHEDULED", scheduledFor: new Date(Date.now() + retryAfterMs) },
         });
         if (token) {
-           
             await job.moveToDelayed(Date.now() + retryAfterMs, token);
             throw new bullmq_1.DelayedError();
         }
-        
         throw new Error("rate_limited_no_token");
     }
     try {
@@ -68,13 +62,12 @@ async function processEmailJob(job, token) {
                 lastError: String(err?.message ?? err),
             },
         });
-        throw err; 
+        throw err;
     }
 }
 exports.emailWorker = new bullmq_1.Worker(emailQueue_1.EMAIL_QUEUE_NAME, processEmailJob, {
     connection: connection_1.redisConnection,
     concurrency: env_1.env.WORKER_CONCURRENCY,
-
     limiter: {
         max: 1,
         duration: env_1.env.MIN_DELAY_BETWEEN_EMAILS_MS,
@@ -88,3 +81,4 @@ exports.emailWorker.on("failed", (job, err) => {
 });
 console.log(`[worker] started — concurrency=${env_1.env.WORKER_CONCURRENCY}, ` +
     `minDelayBetweenSends=${env_1.env.MIN_DELAY_BETWEEN_EMAILS_MS}ms`);
+//# sourceMappingURL=emailWorker.js.map

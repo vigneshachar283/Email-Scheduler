@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getTransporter = getTransporter;
 exports.sendEmail = sendEmail;
 const nodemailer_1 = __importDefault(require("nodemailer"));
-
 const transporterCache = new Map();
 function getTransporter(sender) {
     const cached = transporterCache.get(sender.id);
@@ -33,7 +32,7 @@ async function sendEmail(params) {
         text: params.body,
         html: `<p>${params.body.replace(/\n/g, "<br/>")}</p>`,
     });
-   
     const previewUrl = nodemailer_1.default.getTestMessageUrl(info) || undefined;
     return { messageId: info.messageId, previewUrl };
 }
+//# sourceMappingURL=mailer.js.map

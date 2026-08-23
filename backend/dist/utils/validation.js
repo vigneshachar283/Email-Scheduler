@@ -20,3 +20,4 @@ exports.scheduleCampaignSchema = zod_1.z.object({
     delayBetweenEmailsMs: zod_1.z.coerce.number().int().min(0).default(2000),
     hourlyLimit: zod_1.z.coerce.number().int().positive().default(200),
 });
+//# sourceMappingURL=validation.js.map

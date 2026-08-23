@@ -33,3 +33,4 @@ async function listSentEmails(req, res) {
     ]);
     return res.json({ items, total, page, pageSize });
 }
+//# sourceMappingURL=emailListController.js.map

@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.redisConnection = void 0;
 const ioredis_1 = __importDefault(require("ioredis"));
 const env_1 = require("../config/env");
-
 exports.redisConnection = new ioredis_1.default({
     host: env_1.env.REDIS_HOST,
     port: env_1.env.REDIS_PORT,
@@ -16,3 +15,4 @@ exports.redisConnection = new ioredis_1.default({
 exports.redisConnection.on("error", (err) => {
     console.error("[redis] connection error:", err.message);
 });
+//# sourceMappingURL=connection.js.map

@@ -4,31 +4,31 @@ exports.env = void 0;
 require("dotenv/config");
 const zod_1 = require("zod");
 const envSchema = zod_1.z.object({
-    
+    // Server
     PORT: zod_1.z.string().default("4000"),
     CORS_ORIGIN: zod_1.z.string().default("http://localhost:3000"),
-    
+    // Database
     DATABASE_URL: zod_1.z.string(),
-    
+    // Redis
     REDIS_HOST: zod_1.z.string().default("127.0.0.1"),
     REDIS_PORT: zod_1.z.string().default("6379"),
     REDIS_PASSWORD: zod_1.z.string().optional(),
-    
+    // Worker configuration
     WORKER_CONCURRENCY: zod_1.z.string().default("5"),
     MIN_DELAY_BETWEEN_EMAILS_MS: zod_1.z.string().default("2000"),
     MAX_EMAILS_PER_HOUR_GLOBAL: zod_1.z.string().default("500"),
-    
+    // Google OAuth
     GOOGLE_CLIENT_ID: zod_1.z.string().min(1),
     GOOGLE_CLIENT_SECRET: zod_1.z.string().min(1),
     GOOGLE_CALLBACK_URL: zod_1.z
         .string()
         .default("http://localhost:4000/auth/google/callback"),
-    
+    // JWT used after successful OAuth login
     JWT_SECRET: zod_1.z.string().min(1),
 });
 const parsed = envSchema.safeParse(process.env);
 if (!parsed.success) {
-    console.error("❌ Invalid environment variables:", parsed.error.flatten().fieldErrors);
+    console.error("Invalid environment variables:", parsed.error.flatten().fieldErrors);
     process.exit(1);
 }
 exports.env = {
@@ -46,3 +46,4 @@ exports.env = {
     GOOGLE_CALLBACK_URL: parsed.data.GOOGLE_CALLBACK_URL,
     JWT_SECRET: parsed.data.JWT_SECRET,
 };
+//# sourceMappingURL=env.js.map
