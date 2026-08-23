@@ -6,49 +6,6 @@ The application allows users to sign in with Google, create email campaigns, sch
 
 Emails are scheduled using **BullMQ delayed jobs** and processed asynchronously by a separate worker. The system includes persistence across restarts, configurable concurrency, rate limiting, and Ethereal Email for safe email testing.
 
-> This project uses BullMQ delayed jobs for scheduling and does not use cron.
-
----
-
-## Features Implemented
-
-### Backend
-
-- Email scheduling using BullMQ delayed jobs
-- PostgreSQL persistence for email jobs and application data
-- Redis-backed BullMQ queue
-- Separate worker process for asynchronous email processing
-- Configurable worker concurrency
-- Configurable minimum delay between email sends
-- Redis-backed per-hour rate limiting
-- Rescheduling of jobs instead of dropping them when limits are reached
-- Idempotency protections to reduce duplicate processing
-- Persistence and recovery of pending jobs after restart
-- CSV/text recipient file upload and parsing
-- Ethereal SMTP integration for safe email testing
-- Google OAuth authentication
-- JWT-based authentication for protected API routes
-
-### Frontend
-
-- Login using Google OAuth
-- Protected dashboard
-- User information and logout functionality
-- Compose New Email interface
-- Recipient file upload
-- Detected recipient count
-- Subject and email body input
-- Configurable email start time
-- Configurable delay between emails
-- Configurable hourly limit
-- Scheduled Emails table
-- Sent Emails table
-- Loading states
-- Empty states
-- Basic error handling
-
----
-
 # Architecture Overview
 
 ```text
@@ -575,4 +532,44 @@ Both builds should complete successfully without errors.
 - **Recovery mechanism:** `reconcilePendingJobs()` acts as a defensive backstop for pending jobs that need to be restored to the queue.
 
 ---
+
+## Features Implemented
+
+### Backend
+
+- Email scheduling using BullMQ delayed jobs
+- PostgreSQL persistence for email jobs and application data
+- Redis-backed BullMQ queue
+- Separate worker process for asynchronous email processing
+- Configurable worker concurrency
+- Configurable minimum delay between email sends
+- Redis-backed per-hour rate limiting
+- Rescheduling of jobs instead of dropping them when limits are reached
+- Idempotency protections to reduce duplicate processing
+- Persistence and recovery of pending jobs after restart
+- CSV/text recipient file upload and parsing
+- Ethereal SMTP integration for safe email testing
+- Google OAuth authentication
+- JWT-based authentication for protected API routes
+
+### Frontend
+
+- Login using Google OAuth
+- Protected dashboard
+- User information and logout functionality
+- Compose New Email interface
+- Recipient file upload
+- Detected recipient count
+- Subject and email body input
+- Configurable email start time
+- Configurable delay between emails
+- Configurable hourly limit
+- Scheduled Emails table
+- Sent Emails table
+- Loading states
+- Empty states
+- Basic error handling
+
+---
+
 
