@@ -16,7 +16,7 @@ function CallbackContent() {
       return;
     }
 
-    // Get user details from the JWT payload
+  
     try {
       const payload = JSON.parse(atob(token.split(".")[1]));
 
