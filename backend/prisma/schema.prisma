@@ -8,8 +8,8 @@ datasource db {
 }
 
 enum JobStatus {
-  PENDING   // created in DB, not yet enqueued to BullMQ
-  QUEUED    // enqueued in BullMQ, waiting for its delay to elapse
+  PENDING   
+  QUEUED    
   SENT
   FAILED
   RESCHEDULED // hit rate limit, pushed to a later window
