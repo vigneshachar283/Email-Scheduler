@@ -45,8 +45,7 @@ export const env = {
   CORS_ORIGIN: parsed.data.CORS_ORIGIN,
 
   DATABASE_URL: parsed.data.DATABASE_URL,
-
-  REDIS_HOST: parsed.data.REDIS_HOST,
+ REDIS_HOST: parsed.data.REDIS_HOST,
   REDIS_PORT: Number(parsed.data.REDIS_PORT),
   REDIS_PASSWORD: parsed.data.REDIS_PASSWORD,
 
