@@ -5,12 +5,12 @@ import { useState } from "react";
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
-  function handleLogin() {
-    setLoading(true);
+const handleGoogleLogin = () => {
+  const API_BASE =
+    process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:4000";
 
-    // Redirect the browser to our backend, which starts Google OAuth
-    window.location.href = "http://localhost:4000/auth/google";
-  }
+  window.location.href = `${API_BASE}/auth/google`;
+};
 
   return (
     <main className="min-h-screen flex items-center justify-center px-4">
@@ -30,7 +30,7 @@ export default function LoginPage() {
         </div>
 
         <button
-          onClick={handleLogin}
+          onClick={handleGoogleLogin}
           disabled={loading}
           className="w-full flex items-center justify-center gap-2 rounded-lg bg-brand-500 text-white text-sm font-medium py-2.5 hover:bg-brand-600 transition disabled:opacity-60"
         >
