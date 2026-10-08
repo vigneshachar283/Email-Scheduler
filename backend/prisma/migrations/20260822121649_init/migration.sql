@@ -1,6 +1,8 @@
 -- CreateEnum
 CREATE TYPE "JobStatus" AS ENUM ('PENDING', 'QUEUED', 'SENT', 'FAILED', 'RESCHEDULED');
 
+
+
 -- CreateTable
 CREATE TABLE "Sender" (
     "id" TEXT NOT NULL,
