@@ -68,6 +68,6 @@ async function scheduleCampaign(req, res) {
         skippedDuplicates,
         firstScheduledFor: created[0]?.scheduledFor,
         lastScheduledFor: created[created.length - 1]?.scheduledFor,
-    });
+});
 }
 //# sourceMappingURL=scheduleController.js.map
