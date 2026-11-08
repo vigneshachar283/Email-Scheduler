@@ -66,6 +66,7 @@ PostgreSQL is the application's **source of truth** for email jobs and their sta
 
 The application handles restart scenarios using the following approach:
 
+
 - Email jobs and their statuses are stored persistently in PostgreSQL.
 - BullMQ delayed jobs are stored in Redis.
 - The API runs `reconcilePendingJobs()` during startup as a defensive recovery mechanism.
