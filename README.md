@@ -6,7 +6,6 @@ The application allows users to sign in with Google, create email campaigns, sch
 
 Emails are scheduled using **BullMQ delayed jobs** and processed asynchronously by a separate worker. The system includes persistence across restarts, configurable concurrency, rate limiting, and Ethereal Email for safe email testing.
 
-
 # Architecture Overview
 
 ```text
